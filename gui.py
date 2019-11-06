@@ -8,6 +8,9 @@ from rectangle import Rectangle
 from square import Square
 from circle import Circle
 
+from math import ceil
+
+
 class Gui:
     def __init__(self):
         pygame.init()
@@ -72,6 +75,43 @@ class Gui:
         bucket_rect.move_ip(300, 0)
         self.layer.blit(bucket_icon, bucket_rect)
 
+
+        self.color_values = [
+            '#173F5F',
+            '#20639B',
+            '#3CAEA3',
+            '#F6D55C',
+            '#ED553B',
+            '#e72020',
+            '#4de32a',
+            '#28cae1',
+            '#f477dc',
+            '#fbf230',
+            '#08469E',
+            '#C2352D',
+            '#F4F3F4',
+            '#824C41',
+            '#D89E6D',
+            '#007065',
+            '#FFFFFF',
+            '#000000',
+        ]
+
+        self.color = []
+        self.color_rects = []
+        for i in range(ceil(len(self.color_values)/2)):
+            self.color.append( pygame.Color(self.color_values[i]) )
+            self.color_rects.append( pygame.Rect(400 + (i*25), 0, 25, 25) )
+            pygame.draw.rect(self.layer, self.color[i], self.color_rects[i])
+
+        for i in range( ceil(len(self.color_values)/2), len(self.color_values)):
+            self.color.append( pygame.Color(self.color_values[i]) )
+            self.color_rects.append( pygame.Rect(400 + ( (i - (ceil(len(self.color_values)/2)) )  *25), 25, 25, 25) )
+            pygame.draw.rect(self.layer, self.color[i], self.color_rects[i])
+
+
+
+
         self.screen.blit(self.layer, (0,0))
 
         pygame.display.flip()
@@ -79,6 +119,7 @@ class Gui:
 
         #
         self.layer.blit(self.screen, (0,0))
+        self.current_color = pygame.Color('#000000') #black
         while True:
             for event in pygame.event.get():
 
@@ -87,35 +128,44 @@ class Gui:
                     pygame.quit()
                     exit()
 
-                if event.type == MOUSEBUTTONDOWN and event.button == 1 and self.Inside(line_rect):
-                    self.current_tool = Line()
-                    print("Line tool selected")
-                    continue
+                color_changed_flag = False
+                if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                    for i in range(len(self.color_rects)):
+                        if self.Inside(self.color_rects[i]):
+                            print(f"Color {self.color_values[i]} selected")
+                            self.current_color = self.color[i]
+                            self.current_tool.att_color(self.color[i])
+                            color_changed_flag = True
+                            break
 
-                if event.type == MOUSEBUTTONDOWN and event.button == 1 and self.Inside(polyline_rect):
-                    self.current_tool = Polyline()
-                    print("Polyline tool selected")
-                    continue
+                    else:
+                        if self.Inside(line_rect):
+                            self.current_tool = Line()
+                            print("Line tool selected")
+                            continue
 
-                if event.type == MOUSEBUTTONDOWN and event.button == 1 and self.Inside(rectangle_rect):
-                    self.current_tool = Rectangle()
-                    print("Rectangle tool selected")
-                    continue
+                        elif self.Inside(polyline_rect):
+                            self.current_tool = Polyline()
+                            print("Polyline tool selected")
+                            continue
 
-                if event.type == MOUSEBUTTONDOWN and event.button == 1 and self.Inside(square_rect):
-                    self.current_tool = Square()
-                    print("Square tool selected")
-                    continue
+                        elif self.Inside(rectangle_rect):
+                            self.current_tool = Rectangle()
+                            print("Rectangle tool selected")
+                            continue
 
-                if event.type == MOUSEBUTTONDOWN and event.button == 1 and self.Inside(circle_rect):
-                    self.current_tool = Circle()
-                    print("Circle tool selected")
-                    continue
+                        elif self.Inside(square_rect):
+                            self.current_tool = Square()
+                            print("Square tool selected")
+                            continue
 
+                        elif self.Inside(circle_rect):
+                            self.current_tool = Circle(self.current_color)
+                            print("Circle tool selected")
+                            continue
 
-
-
-                self.current_tool.draw(self.screen, self.layer, event, pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1], self.keyboard)
+                if not color_changed_flag:
+                    self.current_tool.draw(self.screen, self.layer, event, pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1], self.keyboard)
                 pygame.display.flip()
 
 

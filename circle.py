@@ -4,10 +4,14 @@ from tool import Tool
 
 class Circle(Tool):
 
-    def __init__(self):
+    def __init__(self, color):
         self.first_click = False
         self.points = []
+        self.color = color
+        print(f"Im a circle and my color is {color}")
 
+    def att_color(self, color):
+        self.color = color
 
     def circlePoints(self, layer, x, y, x1, y1, color):
         if  y+y1 > 60:
@@ -34,7 +38,9 @@ class Circle(Tool):
 
 
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-            self.__init__()
+            self.first_click = False
+            self.points = []
+
         # First click -> Save the line origin
         if event.type == MOUSEBUTTONDOWN  and self.first_click == False:
             self.first_click = True
@@ -44,13 +50,14 @@ class Circle(Tool):
             if len(self.points) == 2:
                 self.points.pop()
             self.points.append((mouse_x,mouse_y))
-            self.drawCircle(screen, self.points[0], self.points[1], (0,0,0))
+            self.drawCircle(screen, self.points[0], self.points[1], self.color)
         # Second click -> Fixed the line on screen and background and prepare to another line
         elif self.first_click and event.type == MOUSEBUTTONDOWN and event.button == 1:
             self.points.append((mouse_x,mouse_y))
-            self.drawCircle(screen, self.points[0], self.points[1], (0,0,0))
-            self.drawCircle(background, self.points[0], self.points[1], (0,0,0))
-            self.__init__()
+            self.drawCircle(screen, self.points[0], self.points[1], self.color)
+            self.drawCircle(background, self.points[0], self.points[1], self.color)
+            self.first_click = False
+            self.points = []
 
     def drawCircle(self, layer, point1, point2, color):
         x1, y1 = point1
