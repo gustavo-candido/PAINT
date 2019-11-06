@@ -4,9 +4,10 @@ from tool import Tool
 
 class Square(Tool):
 
-    def __init__(self):
+    def __init__(self, color):
         self.first_click = False
         self.points = []
+        self.color = color
 
     def draw(self, screen, background, event, mouse_x, mouse_y, keyboard):
         if mouse_y <= 60:   # 60 = Height Tool Menu
@@ -14,7 +15,7 @@ class Square(Tool):
 
 
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-            self.__init__()
+            self.__init__(self.color)
         # First click -> Save the line origin
         if event.type == MOUSEBUTTONDOWN  and self.first_click == False:
             self.first_click = True
@@ -24,13 +25,13 @@ class Square(Tool):
             if len(self.points) == 2:
                 self.points.pop()
             self.points.append((mouse_x,mouse_y))
-            self.drawSquare(screen, self.points[0], self.points[1], (0,0,0))
+            self.drawSquare(screen, self.points[0], self.points[1], self.color)
         # Second click -> Fixed the line on screen and background and prepare to another line
         elif self.first_click and event.type == MOUSEBUTTONDOWN and event.button == 1:
             self.points.append((mouse_x,mouse_y))
-            self.drawSquare(screen, self.points[0], self.points[1], (0,0,0))
-            self.drawSquare(background, self.points[0], self.points[1], (0,0,0))
-            self.__init__()
+            self.drawSquare(screen, self.points[0], self.points[1], self.color)
+            self.drawSquare(background, self.points[0], self.points[1], self.color)
+            self.__init__(self.color)
 
 
     def drawSquare(self, layer, point1, point2, color):

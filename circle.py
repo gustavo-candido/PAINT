@@ -10,8 +10,6 @@ class Circle(Tool):
         self.color = color
         print(f"Im a circle and my color is {color}")
 
-    def att_color(self, color):
-        self.color = color
 
     def circlePoints(self, layer, x, y, x1, y1, color):
         if  y+y1 > 60:

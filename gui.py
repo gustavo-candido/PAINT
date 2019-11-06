@@ -137,25 +137,27 @@ class Gui:
                             self.current_tool.att_color(self.color[i])
                             color_changed_flag = True
                             break
+                    if color_changed_flag:
+                        continue
 
                     else:
                         if self.Inside(line_rect):
-                            self.current_tool = Line()
+                            self.current_tool = Line(self.current_color)
                             print("Line tool selected")
                             continue
 
                         elif self.Inside(polyline_rect):
-                            self.current_tool = Polyline()
+                            self.current_tool = Polyline(self.current_color)
                             print("Polyline tool selected")
                             continue
 
                         elif self.Inside(rectangle_rect):
-                            self.current_tool = Rectangle()
+                            self.current_tool = Rectangle(self.current_color)
                             print("Rectangle tool selected")
                             continue
 
                         elif self.Inside(square_rect):
-                            self.current_tool = Square()
+                            self.current_tool = Square(self.current_color)
                             print("Square tool selected")
                             continue
 
@@ -164,8 +166,8 @@ class Gui:
                             print("Circle tool selected")
                             continue
 
-                if not color_changed_flag:
-                    self.current_tool.draw(self.screen, self.layer, event, pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1], self.keyboard)
+
+                self.current_tool.draw(self.screen, self.layer, event, pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1], self.keyboard)
                 pygame.display.flip()
 
 
