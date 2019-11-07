@@ -34,4 +34,3 @@ class Polyline(Line):
             self.drawLine(screen, self.points[0][0], self.points[0][1], self.points[1][0], self.points[1][1], self.color)
             self.drawLine(background, self.points[0][0], self.points[0][1], self.points[1][0], self.points[1][1], self.color)
             self.points = [self.points[1]]
-###########################################################################################################################################################################################################

@@ -7,6 +7,7 @@ from polyline import Polyline
 from rectangle import Rectangle
 from square import Square
 from circle import Circle
+from curve import Curve
 
 from math import ceil
 
@@ -29,6 +30,7 @@ class Gui:
         self.keyboard = [0]*255
         # Set current tool to nothing
         self.current_tool = Tool()
+
 
 
         # Set background initial color and tool icons
@@ -109,21 +111,17 @@ class Gui:
             self.color_rects.append( pygame.Rect(400 + ( (i - (ceil(len(self.color_values)/2)) )  *25), 25, 25, 25) )
             pygame.draw.rect(self.layer, self.color[i], self.color_rects[i])
 
-
-
-
         self.screen.blit(self.layer, (0,0))
 
         pygame.display.flip()
 
 
-        #
         self.layer.blit(self.screen, (0,0))
         self.current_color = pygame.Color('#000000') #black
         while True:
             for event in pygame.event.get():
-
                 self.screen.blit(self.layer, (0,0))
+
                 if event.type == QUIT:
                     pygame.quit()
                     exit()
@@ -166,9 +164,14 @@ class Gui:
                             print("Circle tool selected")
                             continue
 
+                        elif self.Inside(curve_rect):
+                            self.current_tool = Curve(self.current_color)
+                            print("Curve tool selected")
+                            continue
 
                 self.current_tool.draw(self.screen, self.layer, event, pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1], self.keyboard)
                 pygame.display.flip()
+            # pygame.display.flip()
 
 
     def Inside(self, rect):
