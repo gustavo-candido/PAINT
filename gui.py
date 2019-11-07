@@ -8,6 +8,8 @@ from rectangle import Rectangle
 from square import Square
 from circle import Circle
 from curve import Curve
+from fill import Fill
+
 
 from math import ceil
 
@@ -167,6 +169,11 @@ class Gui:
                         elif self.Inside(curve_rect):
                             self.current_tool = Curve(self.current_color)
                             print("Curve tool selected")
+                            continue
+
+                        elif self.Inside(bucket_rect):
+                            self.current_tool = Fill(self.current_color)
+                            print("Fill tool selected")
                             continue
 
                 self.current_tool.draw(self.screen, self.layer, event, pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1], self.keyboard)
